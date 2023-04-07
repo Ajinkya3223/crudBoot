@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "user")
 public class User {
+    /** model class**/
     @Id
     private String userId;
     //@NotNull
