@@ -41,7 +41,7 @@ public class UserImpl  implements UserService {
         User user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("userNot found"));
         user.setUserName(userDto.getUserName());
         user.setPassword(userDto.getPassword());
-        user.setAbout(userDto.getGender());
+        user.setAbout(userDto.getAbout());
 
         User updateUser = userRepository.save(user);
         UserDto updatedDto = entityToDto(updateUser);
@@ -70,7 +70,9 @@ public class UserImpl  implements UserService {
 
     }
 
-
+    public UserImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     private User dtoToEntity(UserDto userDto) {
 

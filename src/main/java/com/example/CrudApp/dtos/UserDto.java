@@ -26,4 +26,7 @@ public class UserDto {
    // @NotBlank(message = "about is required")
     private String about;
 
+
+
+
 }
