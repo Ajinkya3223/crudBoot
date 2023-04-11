@@ -1,9 +1,10 @@
-package com.example.CrudApp.service.impl;
+package com.example.CrudApp.repository;
 
 import com.example.CrudApp.dtos.UserDto;
 import com.example.CrudApp.entities.User;
 import    com.example.CrudApp.repository.UserRepository;
 import com.example.CrudApp.service.UserService;
+import com.example.CrudApp.service.impl.UserImpl;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.example.CrudApp.service.impl;
+package com.example.CrudApp.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
