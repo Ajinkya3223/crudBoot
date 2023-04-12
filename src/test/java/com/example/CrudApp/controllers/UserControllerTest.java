@@ -2,6 +2,8 @@ package com.example.CrudApp.controllers;
 
 import com.example.CrudApp.dtos.UserDto;
 import com.example.CrudApp.entities.User;
+import com.example.CrudApp.exception.ResourceNotFoundException;
+import com.example.CrudApp.repository.UserRepository;
 import com.example.CrudApp.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -24,6 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.mockito.Mockito.when;
@@ -39,6 +42,9 @@ public class UserControllerTest {
     @MockBean
     private UserService userService;
 
+
+    @MockBean
+    private UserRepository userRepository;
 
     private User user;
     @Autowired
@@ -185,6 +191,8 @@ public class UserControllerTest {
 
 
     }
+
+
 
     private String convertObjectToJsonString(Object user) {
 

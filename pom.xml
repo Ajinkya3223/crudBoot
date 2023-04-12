@@ -67,6 +67,15 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-inline -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
+			<version>5.2.0</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -128,11 +137,12 @@
 						<exclude>**/configuration/**</exclude>
 						<exclude>**/*Application*</exclude>
 
-						<exclude>**/com/boot/Curdproject/curdProject/entities/**</exclude>
-						<exclude>**/com/boot/Curdproject/curdProject/exception/**</exclude>
-						<exclude>**/com/boot/Curdproject/curdProject/validate/**</exclude>
-						<exclude>*/com/boot/Curdproject/curdProject/config/**</exclude>
-						<exclude>*/com/boot/Curdproject/curdProject/dtos/**</exclude>
+						<exclude>**/com/example/CrudApp/entities/**</exclude>
+						<exclude>**/com/example/CrudApp/exception/**</exclude>
+						<exclude>**/com/example/CrudApp/validate/**</exclude>
+						<exclude>*/com/example/CrudApp/config/**</exclude>
+						<exclude>**/com/example/CrudApp/dtos/**</exclude>
+
 
 					</excludes>
 				</configuration>
