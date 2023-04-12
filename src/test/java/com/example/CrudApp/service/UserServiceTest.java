@@ -204,7 +204,7 @@ public class UserServiceTest {
 
     @Test
     public void deleteUserTest_userNotFound() {
-        String userId = "ac656";
+        String userId = "ac656789";
         when(userRepository.findById(anyString())).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> userService.deleteUser(userId));
