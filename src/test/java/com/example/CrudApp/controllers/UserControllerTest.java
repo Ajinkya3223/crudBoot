@@ -322,7 +322,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                        // .withBody(convertObjectToJsonString(userDto))));
 
         // When
-        ResponseEntity<UserDto> response = restTemplate.getForEntity("http://localhost:8080/userdata/"+userId, null);
+        ResponseEntity<UserDto> response = restTemplate.getForEntity("http://localhost:8080/userdata/"+userId,null);
 
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
