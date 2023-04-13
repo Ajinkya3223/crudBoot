@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.mockito.Mockito.*;
 @Slf4j
 @SpringBootTest
-public class UserServiceTest {
+ class UserServiceTest {
    @MockBean    // this make dummmy repo available for the spring context
    private UserRepository userRepository;
 
@@ -76,14 +76,14 @@ public class UserServiceTest {
 
 
     @Test
-    public void createUserTest(){
+     void createUserTest(){
         when(userRepository.save(any())).thenReturn(user);
         UserDto user1=userService.createUser(mapper.map(user, UserDto.class));
         Assertions.assertNotNull(user1);
         Assertions.assertEquals("Ram", user1.getUserName());
     }
     @Test
-    public void updateUserTest(){
+     void updateUserTest(){
         String userId = "hosdhfosdhvo";
         UserDto userDto = UserDto.builder()
                 .userName("Shriram")
@@ -106,7 +106,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void deleteUserTest() {
+     void deleteUserTest() {
         String userid = "abcde";
         when(userRepository.findById("abcde")).thenReturn(Optional.of(user));
         userService.deleteUser(userid);
@@ -116,7 +116,7 @@ public class UserServiceTest {
 
     }
     @Test
-    public void getAllUsersTest2() {
+     void getAllUsersTest2() {
         User user1 = User.builder()
                 .userName("Ganesh")
                 .Email("Ganesh@gmail.com").about("This is  method")
@@ -145,7 +145,7 @@ public class UserServiceTest {
 
 
     @Test
-    public void getUserByIdTest() {
+     void getUserByIdTest() {
 
         String userId = "userIdTest";
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(user));
@@ -162,7 +162,7 @@ public class UserServiceTest {
 
 
     @Test
-    public void testGetUserById_UserNotFound() {
+     void testGetUserById_UserNotFound() {
         // Arrange
         when(userRepository.findById(anyString())).thenReturn(Optional.empty());
 
@@ -203,7 +203,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void deleteUserTest_userNotFound() {
+     void deleteUserTest_userNotFound() {
         String userId = "ac656789";
         when(userRepository.findById(anyString())).thenReturn(Optional.empty());
 

@@ -7,12 +7,12 @@ import com.example.CrudApp.repository.UserRepository;
 import com.example.CrudApp.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 @Service
 
 public class UserImpl  implements UserService {
@@ -59,7 +59,11 @@ public class UserImpl  implements UserService {
     @Override
     public List<UserDto> getAllUser() {
         List<User> users = userRepository.findAll();
-        List<UserDto> dtolist =   users.stream().map(user ->entityToDto(user)).collect(Collectors.toList());
+       /**   List<UserDto> dtolist =   users.stream().map(user ->entityToDto(user)).collect(Collectors.toList()); **/
+        List<UserDto> dtolist = users.stream()
+                .map(user->entityToDto(user))
+                .toList();
+
         return dtolist;
     }
 

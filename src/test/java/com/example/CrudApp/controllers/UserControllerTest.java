@@ -15,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -28,7 +31,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import  com.github.tomakehurst.wiremock.client.*;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -36,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerTest {
+ class UserControllerTest {
 
 
     @MockBean
@@ -54,7 +60,7 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void init() {
+     void init() {
 
 
         user = User.builder()
@@ -65,7 +71,7 @@ public class UserControllerTest {
                 .build();
     }
     @Test
-    public void createUserTest() throws Exception {
+     void createUserTest() throws Exception {
 
 //        /users +POST+ user data as json
         //data as json+status created
@@ -87,7 +93,7 @@ public class UserControllerTest {
 
 
     @Test
-    public void updateUserTest() throws Exception {
+     void updateUserTest() throws Exception {
 
         // /users/{userId} + PUT request+ json
 
@@ -109,7 +115,7 @@ public class UserControllerTest {
 
     }
     @Test
-    public void getAllUsersTest() throws Exception {
+     void getAllUsersTest() throws Exception {
         UserDto user1= UserDto.builder()
                 .userName("Krushna")
                 .Email("krushnaRam@gmail.com").about("This is testing create method")
@@ -148,7 +154,7 @@ public class UserControllerTest {
 
 
     @Test
-    public void deleteUserTest() throws Exception {
+     void deleteUserTest() throws Exception {
         String userId = "123dfgy67";
         userService.deleteUser(userId);
 
@@ -157,12 +163,12 @@ public class UserControllerTest {
         MvcResult mvcResult = perform.andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         int status = response.getStatus();
-        Assertions.assertEquals(200, status);
+        assertEquals(200, status);
 
     }
 
     @Test
-    public void getUserTest() throws Exception {
+     void getUserTest() throws Exception {
         String userId = "abc12345678";
         User user1 = User.builder().userId(userId)
                 .userName("Krushna")
@@ -189,6 +195,138 @@ public class UserControllerTest {
                // .andExpect(MockMvcResultMatchers.jsonPath("$.userName").value("krushna"));
 
 
+
+    }
+    @Test
+    public void testGetUserById() throws Exception {
+
+        TestRestTemplate restTemplate = new TestRestTemplate();
+
+        String userId = "123";
+        UserDto userDto = new UserDto();
+        userDto.setUserId(userId);
+        userDto.setUserName("abhishek");
+        userDto.setEmail("abhishek@gmail.com");
+        userDto.setGender("male");
+        userDto.setAbout("this is abhishek");
+        userDto.setPassword("23451678");
+
+
+
+        // Stubbing the response of the userService.getUserById() method
+        stubFor(get(urlEqualTo("/users/" + userId))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(convertObjectToJsonString(userDto))));
+
+        // When
+        ResponseEntity<UserDto> response = restTemplate.getForEntity("http://localhost:8080/users/" + userId, UserDto.class);
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(userDto.toString(), response.getBody().toString());
+
+    }
+    @Test
+    public void getAllUserstest() throws Exception {
+
+        TestRestTemplate restTemplate = new TestRestTemplate();
+
+        UserDto user1= UserDto.builder()
+                .userName("Krushna")
+                .Email("krushnaRam@gmail.com").about("This is testing create method")
+                .gender("Male")
+                .Password("1234567899")
+                .build();
+        UserDto user2= UserDto.builder()
+                .userName("Rama")
+                .Email("RamRam@gmail.com").about("This is testing create method")
+                .gender("Male")
+                .Password("123456784599")
+                .build();
+        List<UserDto> userdt= List.of(user1,user2);
+        UserDto userDto = mapper.map(user1, UserDto.class);
+
+
+
+        // Stubbing the response of the userService.getUserById() method
+        stubFor(get(urlEqualTo("/userdata/getall"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(convertObjectToJsonString(userDto))));
+
+        // When
+        ResponseEntity<UserDto> response = restTemplate.getForEntity("http://localhost:8080/userdata/getall" , UserDto.class);
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(userDto.toString(), response.getBody().toString());
+
+    }
+
+
+    @Test
+    public void postcreateUser() throws Exception {
+
+        TestRestTemplate restTemplate = new TestRestTemplate();
+
+        UserDto user1= UserDto.builder()
+                .userName("Krushna")
+                .Email("krushnaRam@gmail.com").about("This is testing create method")
+                .gender("Male")
+                .Password("1234567899")
+                .build();
+
+        UserDto userDto = mapper.map(user1, UserDto.class);
+
+
+
+        // Stubbing the response of the userService.getUserById() method
+        stubFor(post(urlEqualTo("/userdata/save"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(convertObjectToJsonString(userDto))));
+
+        // When
+        ResponseEntity<UserDto> response = restTemplate.postForEntity("http://localhost:8080/userdata/save",userDto,UserDto.class);
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(userDto.toString(), response.getBody().toString());
+
+    }
+    @Test
+    public void deleteUserTestwire() throws Exception {
+
+        TestRestTemplate restTemplate = new TestRestTemplate();
+         String userId="123";
+        UserDto user1= UserDto.builder()
+                .userName("Krushna")
+                .Email("krushnaRam@gmail.com").about("This is testing delete method")
+                .gender("Male")
+                .Password("1234567899")
+                .build();
+
+        UserDto userDto = mapper.map(user1, UserDto.class);
+
+
+
+        // Stubbing the response of the userService.getUserById() method
+        stubFor(delete(urlEqualTo("/userdata/"+userId))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")));
+                       // .withBody(convertObjectToJsonString(userDto))));
+
+        // When
+        ResponseEntity<UserDto> response = restTemplate.getForEntity("http://localhost:8080/userdata/"+userId, null);
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+       // assertEquals(userDto.toString(), response.getBody().toString());
 
     }
 
