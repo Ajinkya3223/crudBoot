@@ -199,7 +199,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     }
     @Test
-    public void testGetUserById() throws Exception {
+     void testGetUserById() throws Exception {
 
         TestRestTemplate restTemplate = new TestRestTemplate();
 
@@ -237,7 +237,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     }
     @Test
-    public void getAllUserstest() throws Exception {
+    void getAllUserstest() throws Exception {
 
         TestRestTemplate restTemplate = new TestRestTemplate();
 
@@ -265,7 +265,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         // Stubbing the response of the userService.getUserById() method
         stubFor(get(urlEqualTo("/userdata/getall"))
                 .willReturn(aResponse()
-                        .withStatus(200)
+                        .withStatus(200).withFixedDelay(2000)
                         .withHeader("Content-Type", "application/json")
                         .withBody(convertObjectToJsonString(userDto))));
 
@@ -281,7 +281,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
     @Test
-    public void postcreateUser() throws Exception {
+    void postcreateUser() throws Exception {
 
         WireMockServer  wireMockServer = new WireMockServer( 8080);
         wireMockServer.start();
@@ -315,8 +315,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     }
     @Test
-    public void deleteUserTestwire() throws Exception {
+    void deleteUserTestwire() throws Exception {
 
+        log.info("started deleteuserwiremocktest");
         WireMockServer  wireMockServer = new WireMockServer( 8080);
         wireMockServer.start();
         TestRestTemplate restTemplate = new TestRestTemplate();
@@ -347,7 +348,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
        // assertEquals(HttpStatus.OK, response.getStatusCode());
        // assertEquals(userDto.toString(), response.getBody().toString());
         verify(exactly(1), deleteRequestedFor(urlPathEqualTo("/userdata/" + userId)));
-
+           log.info("completed the first verifiaction");
 
         // Define the endpoint path and ID of the mapping to delete
         String endpointPath = "/mapping";
@@ -362,7 +363,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
         // Verify that the mock server received the expected DELETE request
         WireMock.verify(WireMock.deleteRequestedFor(WireMock.urlEqualTo(endpointPath + "/" + mappingId)));
-
+         log.info("completed the second verification");
 
 wireMockServer.stop();
 
