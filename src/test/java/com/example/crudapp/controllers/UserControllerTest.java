@@ -1,12 +1,14 @@
-package com.example.CrudApp.controllers;
+package com.example.crudapp.controllers;
 
-import com.example.CrudApp.dtos.UserDto;
-import com.example.CrudApp.entities.User;
-import com.example.CrudApp.exception.ResourceNotFoundException;
-import com.example.CrudApp.repository.UserRepository;
-import com.example.CrudApp.service.UserService;
+import com.example.crudapp.dtos.UserDto;
+import com.example.crudapp.entities.User;
+import com.example.crudapp.repository.UserRepository;
+import com.example.crudapp.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,7 +18,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,12 +30,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import  com.github.tomakehurst.wiremock.client.*;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -42,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Slf4j
  class UserControllerTest {
 
 
@@ -58,6 +58,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
     @Autowired
     private MockMvc mockMvc;
+
 
     @BeforeEach
      void init() {
@@ -211,7 +212,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         userDto.setAbout("this is abhishek");
         userDto.setPassword("23451678");
 
-
+        WireMockServer  wireMockServer = new WireMockServer( 8080);
+        wireMockServer.start();
 
         // Stubbing the response of the userService.getUserById() method
         stubFor(get(urlEqualTo("/users/" + userId))
@@ -227,11 +229,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(userDto.toString(), response.getBody().toString());
 
+
+
+
+
+        wireMockServer.stop();
+
     }
     @Test
     public void getAllUserstest() throws Exception {
 
         TestRestTemplate restTemplate = new TestRestTemplate();
+
+
+        WireMockServer  wireMockServer = new WireMockServer( 8080);
+        wireMockServer.start();
 
         UserDto user1= UserDto.builder()
                 .userName("Krushna")
@@ -263,6 +275,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(userDto.toString(), response.getBody().toString());
+        wireMockServer.stop();
 
     }
 
@@ -270,6 +283,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     @Test
     public void postcreateUser() throws Exception {
 
+        WireMockServer  wireMockServer = new WireMockServer( 8080);
+        wireMockServer.start();
         TestRestTemplate restTemplate = new TestRestTemplate();
 
         UserDto user1= UserDto.builder()
@@ -296,11 +311,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(userDto.toString(), response.getBody().toString());
+        wireMockServer.stop();
 
     }
     @Test
     public void deleteUserTestwire() throws Exception {
 
+        WireMockServer  wireMockServer = new WireMockServer( 8080);
+        wireMockServer.start();
         TestRestTemplate restTemplate = new TestRestTemplate();
          String userId="123";
         UserDto user1= UserDto.builder()
@@ -322,13 +340,39 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                        // .withBody(convertObjectToJsonString(userDto))));
 
         // When
-        ResponseEntity<UserDto> response = restTemplate.getForEntity("http://localhost:8080/userdata/"+userId,null);
+        restTemplate.delete("http://localhost:8080/userdata/"+userId);
+
 
         // Then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+       // assertEquals(HttpStatus.OK, response.getStatusCode());
        // assertEquals(userDto.toString(), response.getBody().toString());
+        verify(exactly(1), deleteRequestedFor(urlPathEqualTo("/userdata/" + userId)));
+
+
+        // Define the endpoint path and ID of the mapping to delete
+        String endpointPath = "/mapping";
+        int mappingId = 123;
+
+        // Set up the mock response for the DELETE request
+        WireMock.stubFor(WireMock.delete(WireMock.urlEqualTo(endpointPath + "/" + mappingId))
+                .willReturn(WireMock.noContent()));
+
+        // Send the DELETE request to the mock server
+        restTemplate.delete("http://localhost:8080/mapping/"+mappingId);
+
+        // Verify that the mock server received the expected DELETE request
+        WireMock.verify(WireMock.deleteRequestedFor(WireMock.urlEqualTo(endpointPath + "/" + mappingId)));
+
+
+wireMockServer.stop();
+
+
+
+
 
     }
+
+
 
 
 
@@ -342,5 +386,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         }
 
 }
+    @AfterAll
+    public static void cleanup() {
+        log.info("After all test cases ");
 
+    }
 }

@@ -1,9 +1,8 @@
-package com.example.CrudApp.controllers;
+package com.example.crudapp.controllers;
 
-import com.example.CrudApp.dtos.ApiResponseMsg;
-import com.example.CrudApp.dtos.UserDto;
-import com.example.CrudApp.service.UserService;
-import jakarta.validation.Valid;
+import com.example.crudapp.dtos.ApiResponseMsg;
+import com.example.crudapp.dtos.UserDto;
+import com.example.crudapp.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

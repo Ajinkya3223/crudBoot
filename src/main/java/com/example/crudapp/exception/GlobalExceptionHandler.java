@@ -1,6 +1,6 @@
-package com.example.CrudApp.exception;
+package com.example.crudapp.exception;
 
-import com.example.CrudApp.dtos.ApiResponseMsg;
+import com.example.crudapp.dtos.ApiResponseMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

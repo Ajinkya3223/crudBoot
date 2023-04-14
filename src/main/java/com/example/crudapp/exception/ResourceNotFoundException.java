@@ -1,4 +1,4 @@
-package com.example.CrudApp.exception;
+package com.example.crudapp.exception;
 
 import lombok.Builder;
 

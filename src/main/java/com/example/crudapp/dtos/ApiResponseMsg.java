@@ -1,4 +1,4 @@
-package com.example.CrudApp.dtos;
+package com.example.crudapp.dtos;
 
 import lombok.*;
 import org.springframework.http.HttpStatus;

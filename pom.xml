@@ -68,9 +68,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
+
+
+		<!-- https://mvnrepository.com/artifact/com.github.tomakehurst/wiremock-jre8-standalone -->
 		<dependency>
 			<groupId>com.github.tomakehurst</groupId>
-			<artifactId>wiremock-jre8</artifactId>
+			<artifactId>wiremock-jre8-standalone</artifactId>
 			<version>2.35.0</version>
 			<scope>test</scope>
 		</dependency>
@@ -101,6 +104,16 @@
 			<artifactId>mockito-inline</artifactId>
 			<version>5.2.0</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.youcruit.ams.api.client</groupId>
+			<artifactId>AMSApiClient</artifactId>
+			<version>0.5.9</version>
+		</dependency>
+		<dependency>
+			<groupId>com.youcruit.ams.api.client</groupId>
+			<artifactId>AMSApiClient</artifactId>
+			<version>0.5.9</version>
 		</dependency>
 
 	</dependencies>

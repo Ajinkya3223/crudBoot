@@ -1,10 +1,9 @@
-package com.example.CrudApp.service;
+package com.example.crudapp.service;
 
-import com.example.CrudApp.dtos.UserDto;
-import com.example.CrudApp.entities.User;
-import    com.example.CrudApp.repository.UserRepository;
-import com.example.CrudApp.service.UserService;
-import com.example.CrudApp.service.impl.UserImpl;
+import com.example.crudapp.dtos.UserDto;
+import com.example.crudapp.entities.User;
+import    com.example.crudapp.repository.UserRepository;
+import com.example.crudapp.service.impl.UserImpl;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,11 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
 import static org.mockito.Mockito.verify;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest

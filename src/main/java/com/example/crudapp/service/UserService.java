@@ -1,6 +1,6 @@
-package com.example.CrudApp.service;
+package com.example.crudapp.service;
 
-import com.example.CrudApp.dtos.UserDto;
+import com.example.crudapp.dtos.UserDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

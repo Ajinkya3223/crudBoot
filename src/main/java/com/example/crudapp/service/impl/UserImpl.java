@@ -1,10 +1,10 @@
-package com.example.CrudApp.service.impl;
+package com.example.crudapp.service.impl;
 
-import com.example.CrudApp.dtos.UserDto;
-import com.example.CrudApp.entities.User;
-import com.example.CrudApp.exception.ResourceNotFoundException;
-import com.example.CrudApp.repository.UserRepository;
-import com.example.CrudApp.service.UserService;
+import com.example.crudapp.dtos.UserDto;
+import com.example.crudapp.entities.User;
+import com.example.crudapp.exception.ResourceNotFoundException;
+import com.example.crudapp.repository.UserRepository;
+import com.example.crudapp.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
