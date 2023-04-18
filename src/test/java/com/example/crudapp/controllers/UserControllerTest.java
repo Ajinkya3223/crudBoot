@@ -294,7 +294,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 .Password("1234567899")
                 .build();
 
-        UserDto userDto = mapper.map(user1, UserDto.class);
+       // UserDto userDto = mapper.map(user1, UserDto.class);
 
 
 
@@ -303,14 +303,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBody(convertObjectToJsonString(userDto))));
+                        .withBody(convertObjectToJsonString(user1))));
 
         // When
-        ResponseEntity<UserDto> response = restTemplate.postForEntity("http://localhost:8080/userdata/save",userDto,UserDto.class);
+        ResponseEntity<UserDto> response = restTemplate.postForEntity("http://localhost:8080/userdata/save",user1,UserDto.class);
 
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(userDto.toString(), response.getBody().toString());
+        assertEquals(user1.toString(), response.getBody().toString());
         wireMockServer.stop();
 
     }

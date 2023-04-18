@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -67,7 +68,7 @@ import static org.mockito.Mockito.*;
      void createUserTest(){
         when(userRepository.save(any())).thenReturn(user);
         UserDto user1=userService.createUser(mapper.map(user, UserDto.class));
-        Assertions.assertNotNull(user1);
+        assertNotNull(user1);
         Assertions.assertEquals("Ram", user1.getUserName());
     }
     @Test
@@ -87,7 +88,7 @@ import static org.mockito.Mockito.*;
 //        UserDto updatedUser=mapper.map(user,UserDto.class);
         System.out.println(updatedUser.getUserName());
         log.info("updated user {}",updatedUser.getUserName());
-        Assertions.assertNotNull(userDto);
+        assertNotNull(userDto);
         Assertions.assertEquals(userDto.getUserName(), updatedUser.getUserName(), "Name is not validated !!");
         //multiple assertion are valid..
 
@@ -142,7 +143,7 @@ import static org.mockito.Mockito.*;
 
         UserDto userDto = userService.getUserById(userId);
 
-        Assertions.assertNotNull(userDto);
+        assertNotNull(userDto);
         Assertions.assertEquals(user.getUserName(), userDto.getUserName(), "Name not matched !!");
 
 
@@ -176,18 +177,22 @@ import static org.mockito.Mockito.*;
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // when + then
-        Assertions.assertThrows(RuntimeException.class, () -> userService.updateUser(userDto, userId));
+        Throwable exception=Assertions.assertThrows(RuntimeException.class, () -> userService.updateUser(userDto, userId));
         verify(userRepository, times(1)).findById(userId);
         verify(userRepository, never()).save(any());
+      assertNotNull(exception);
+        when(userRepository.findById(userId)).thenThrow(new RuntimeException());
+        verify(userRepository,never()).save(any());
     }
 
     @Test
     void testGetUserByIdThrowsResourceNotFoundException() {
         String userId = "1";
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
-        assertThrows(ResourceNotFoundException.class, () -> {
+       Throwable exception= assertThrows(ResourceNotFoundException.class, () -> {
             userService.getUserById(userId);
         });
+        assertNotNull(exception);
     }
 
     @Test
@@ -195,11 +200,23 @@ import static org.mockito.Mockito.*;
         String userId = "ac656789";
         when(userRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> userService.deleteUser(userId));
+       Throwable exception= assertThrows(RuntimeException.class, () -> userService.deleteUser(userId));
+       assertNotNull(exception);
         verify(userRepository, times(1)).findById(userId);
         verify(userRepository, never()).delete(any());
 
     }
+     @Test
+    void deleteUSer_notfound(){
+        String id="fdj4578h";
+                when(userRepository.findById(anyString())).thenReturn(Optional.empty());// this will throw exception because this will return empty object
+            Throwable exception=    assertThrows(RuntimeException.class,()->userService.deleteUser(id));
+         // Verify that the expected exception was thrown
+         assertNotNull(exception);
+         verify (userRepository,never()).delete(any());
+
+    }
+
 
 }
 
